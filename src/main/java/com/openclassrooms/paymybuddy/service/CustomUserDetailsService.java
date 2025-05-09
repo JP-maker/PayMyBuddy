@@ -2,6 +2,7 @@ package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections; // Correction: Utiliser Collections.singletonList
 
+@Slf4j
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -22,13 +24,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info("Chargement de l'utilisateur avec l'email : {}", email);
+        if (email == null || email.isEmpty()) {
+            log.warn("Email vide ou nul fourni pour le chargement de l'utilisateur.");
+            throw new UsernameNotFoundException("Email vide ou nul fourni.");
+        }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email : " + email));
-
+        log.info("Utilisateur trouvé : {}", user.getEmail());
         // Pour cet exemple simple, on donne juste un rôle USER à tout le monde
         // Dans une vraie appli, les rôles seraient stockés en BDD
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
-
+        log.info("Rôle attribué à l'utilisateur : {}", authority.getAuthority());
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPasswordHash(),
