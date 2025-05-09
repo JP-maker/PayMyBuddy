@@ -1,10 +1,3 @@
-# Pay My Buddy
-
-### MySQL script de création de la base de données
-Script de création de la base de données MySQL pour PayMyBuddy v0.1
-```sql
--- ATTENTION : La ligne suivante supprime la base de données si elle existe déjà.
--- À utiliser avec précaution, surtout en production !
 DROP DATABASE IF EXISTS paymybuddy_db;
 
 -- Création de la base de données avec un jeu de caractères approprié
@@ -24,13 +17,12 @@ CREATE TABLE Users (
     `username` VARCHAR(100) NULL, -- Nom d'utilisateur optionnel pour affichage
     `email` VARCHAR(255) NOT NULL, -- Identifiant unique pour la connexion et l'ajout d'amis
     `password_hash` VARCHAR(255) NOT NULL, -- Mot de passe haché (ne jamais stocker en clair)
-    `balance` DECIMAL(10, 2) NOT NULL DEFAULT 0.00
+    `balance` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Date de création du compte
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date de dernière modification
     PRIMARY KEY (`user_id`),
     UNIQUE INDEX `idx_email_unique` (`email` ASC), -- Assure l'unicité de l'email
-    CONSTRAINT `chk_balance_non_negative` CHECK (`balance` >= 0) -- Empêche un solde négatif
-) ENGINE = InnoDB;
+);
 
 -- -----------------------------------------------------
 -- Table `Connections`
@@ -51,10 +43,8 @@ CREATE TABLE Connections (
         FOREIGN KEY (`user_id_2`)
         REFERENCES Users (`user_id`)
         ON DELETE CASCADE -- Si un utilisateur est supprimé, ses connexions le sont aussi
-        ON UPDATE CASCADE,
-    CONSTRAINT `chk_different_users` CHECK (`user_id_1` <> `user_id_2`), -- Un utilisateur ne peut pas être ami avec lui-même
-    CONSTRAINT `chk_connection_order` CHECK (`user_id_1` < `user_id_2`) -- Évite les doublons symétriques (A,B) et (B,A)
-) ENGINE = InnoDB;
+        ON UPDATE CASCADE
+);
 
 -- -----------------------------------------------------
 -- Table `Transactions`
@@ -79,13 +69,5 @@ CREATE TABLE Transactions (
         FOREIGN KEY (`receiver_id`)
         REFERENCES Users (`user_id`)
         ON DELETE RESTRICT -- Empêche la suppression d'un utilisateur ayant reçu des fonds
-        ON UPDATE CASCADE,
-    CONSTRAINT `chk_amount_positive` CHECK (`amount` > 0), -- Le montant doit être strictement positif
-    CONSTRAINT `chk_sender_receiver_different` CHECK (`sender_id` <> `receiver_id`) -- L'émetteur et le récepteur doivent être différents
-) ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Fin du script
--- -----------------------------------------------------
-```
-
+        ON UPDATE CASCADE
+);
