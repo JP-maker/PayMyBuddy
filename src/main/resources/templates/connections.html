@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{_layout :: html(pageTitle='Mes Amis', ~{::main/th:block})}">
+
+<th:block th:fragment="content">
+  <hgroup>
+    <h1>Mes Amis</h1>
+    <h2 id="page-subtitle">Ajoutez ou visualisez vos connexions</h2>
+  </hgroup>
+
+  <div th:if="${connectionSuccess}" class="success-message" role="alert" id="connSuccessMsg" th:text="${connectionSuccess}"></div>
+  <div th:if="${connectionError}" class="error-message" role="alert" id="connErrorMsg" th:text="${connectionError}"></div>
+  <div th:if="${#fields.hasErrors('addConnectionDto.*')}" class="error-message" role="alert" id="connFormErrors">
+    <p>Erreurs dans le formulaire d'ajout :</p>
+    <ul>
+      <li th:each="err : ${#fields.errors('addConnectionDto.*')}" th:text="${err}" />
+    </ul>
+  </div>
+
+  <section aria-labelledby="add-friend-heading">
+    <h3 id="add-friend-heading">Ajouter un ami</h3>
+    <form th:action="@{/connections/add}" th:object="${addConnectionDto}" method="post" aria-describedby="connFormErrors">
+      <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+      <label for="friendEmail">Email de l'ami</label>
+      <input type="email" id="friendEmail" th:field="*{friendEmail}" required aria-required="true" placeholder="ami.a.ajouter@example.com" th:attr="aria-invalid=${#fields.hasErrors('friendEmail') ? 'true' : 'false'}" aria-describedby="friendEmailError" autocomplete="email">
+      <small id="friendEmailError" th:if="${#fields.hasErrors('friendEmail')}" th:errors="*{friendEmail}" class="error-message" role="alert"></small>
+      <button type="submit">Ajouter la connexion</button>
+    </form>
+  </section>
+
+  <section aria-labelledby="current-connections-heading">
+    <h3 id="current-connections-heading">Mes connexions actuelles</h3>
+    <div th:if="${#lists.isEmpty(connections)}">
+      <p>Vous n'avez pas encore ajouté d'amis.</p>
+    </div>
+    <ul th:unless="${#lists.isEmpty(connections)}" style="list-style-type: disc; padding-left: 20px;">
+      <li th:each="conn : ${connections}" th:text="${conn.username ?: conn.email}">
+        Nom ou Email de l'ami
+      </li>
+    </ul>
+  </section>
+</th:block>
+</html>

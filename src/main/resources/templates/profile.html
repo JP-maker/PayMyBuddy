@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{_layout :: html(pageTitle='Mon Profil', ~{::main/th:block})}">
+
+<th:block th:fragment="content">
+  <hgroup>
+    <h1>Mon Profil</h1>
+    <h2 id="page-subtitle">Gérez vos informations personnelles</h2>
+  </hgroup>
+
+  <div th:if="${profileSuccess}" class="success-message" role="alert" id="profileSuccessMsg" th:text="${profileSuccess}"></div>
+  <div th:if="${profileError}" class="error-message" role="alert" id="profileErrorMsg" th:text="${profileError}"></div>
+
+  <article>
+    <section aria-labelledby="account-info-heading">
+      <h3 id="account-info-heading">Informations du compte</h3>
+      <p><strong>Email (non modifiable) :</strong> <span th:text="${user.email}">votre.email@example.com</span></p>
+
+      <form th:action="@{/profile/update}" method="post">
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+        <label for="username">Nom d'utilisateur (pour affichage)</label>
+        <input type="text" id="username" name="username" th:value="${user.username}" placeholder="Votre nom ou pseudo" autocomplete="username">
+        <button type="submit">Mettre à jour le nom d'utilisateur</button>
+      </form>
+    </section>
+
+    <section aria-labelledby="change-password-heading" style="margin-top: 2rem; border-top: 1px solid var(--pico-form-element-border-color); padding-top: 1rem;">
+      <h4 id="change-password-heading">Changer le mot de passe</h4>
+      <p><em>Fonctionnalité à venir...</em></p>
+      <!--
+      <form th:action="@{/profile/change-password}" method="post">
+          <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+          <label for="currentPassword">Mot de passe actuel</label>
+          <input type="password" id="currentPassword" name="currentPassword" required autocomplete="current-password">
+
+          <label for="newPassword">Nouveau mot de passe</label>
+          <input type="password" id="newPassword" name="newPassword" required autocomplete="new-password">
+
+          <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="new-password">
+
+          <button type="submit">Changer le mot de passe</button>
+      </form>
+      -->
+    </section>
+  </article>
+</th:block>
+</html>
