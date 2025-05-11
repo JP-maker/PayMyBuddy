@@ -1,8 +1,9 @@
-package com.openclassrooms.paymybuddy.controler;
+package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.dto.UserRegistrationDto;
 import com.openclassrooms.paymybuddy.service.UserService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+@Slf4j
 @Controller
 public class AuthController {
 
@@ -22,11 +24,13 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage() {
+        log.debug("Accès à la page de login");
         return "login"; // Retourne le nom de la vue Thymeleaf (login.html)
     }
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
+        log.debug("Accès au formulaire d'inscription");
         model.addAttribute("userDto", new UserRegistrationDto());
         return "register"; // Retourne register.html
     }
@@ -35,14 +39,18 @@ public class AuthController {
     public String processRegistration(@Valid @ModelAttribute("userDto") UserRegistrationDto userDto,
                                       BindingResult result,
                                       RedirectAttributes redirectAttributes) {
+        log.info("Tentative d'inscription pour l'email: {}", userDto.getEmail());
         if (result.hasErrors()) {
+            log.warn("Echec de validation pour l'inscription de {}: {}", userDto.getEmail(), result.getAllErrors());
             return "register"; // Retourne au formulaire avec les erreurs
         }
         try {
             userService.registerNewUser(userDto);
+            log.info("Inscription réussie pour: {}", userDto.getEmail());
             redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie ! Vous pouvez maintenant vous connecter.");
             return "redirect:/login"; // Redirige vers la page de login
         } catch (Exception e) {
+            log.error("Erreur lors de l'inscription pour {}: {}", userDto.getEmail(), e.getMessage());
             // Met l'erreur dans le BindingResult pour l'afficher sur le formulaire
             result.rejectValue("email", "error.userDto", e.getMessage());
             // Ou utiliser redirectAttributes si on redirige vers register?error=true
