@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       lang="fr">
 <head>
@@ -9,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <!-- Votre CSS personnalisé si besoin -->
     <!-- <link rel="stylesheet" th:href="@{/css/style.css}"> -->
-    <title th:text="${pageTitle ?: 'PayMyBuddy'}">PayMyBuddy</title>
+    <title layout:fragment="title">PayMyBuddy</title>
     <style>
         /* Styles additionnels pour l'accessibilité et la présentation */
         .error-message { color: var(--pico-color-red-600); /* Etait red-500, un peu plus de contraste */
@@ -91,7 +93,9 @@
          ou ici avec des IDs uniques s'ils sont génériques. -->
 
     <!-- Le contenu spécifique de chaque page sera inséré ici -->
-    <th:block th:fragment="content"></th:block>
+    <div layout:fragment="content">
+    </div>
+
 </main>
 
 <footer class="container-fluid">

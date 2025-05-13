@@ -1,7 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{_layout :: html(pageTitle='Connexion', ~{::main/th:block})}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layouts/main_layout.html}"
+>
+<head>
+    <title layout:fragment="title">Page de connexion</title>
+</head>
 
-<th:block th:fragment="content">
+<div layout:fragment="content">
     <article>
         <hgroup>
             <h1>Connexion</h1>
@@ -31,5 +37,5 @@
         </form>
         <p>Pas encore de compte ? <a th:href="@{/register}">Inscrivez-vous ici</a>.</p>
     </article>
-</th:block>
+</div>
 </html>

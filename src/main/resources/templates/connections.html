@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{_layout :: html(pageTitle='Mes Amis', ~{::main/th:block})}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layouts/main_layout.html}"
+>
 
 <th:block th:fragment="content">
   <hgroup>
