@@ -4,7 +4,11 @@
       layout:decorate="~{layouts/main_layout.html}"
 >
 
-<th:block th:fragment="content">
+<head>
+  <title layout:fragment="title">Mon profil - PayMyBuddy</title>
+</head>
+
+<div layout:fragment="content">
   <hgroup>
     <h1>Mon Profil</h1>
     <h2 id="page-subtitle">Gérez vos informations personnelles</h2>
@@ -46,5 +50,5 @@
       -->
     </section>
   </article>
-</th:block>
+</div>
 </html>

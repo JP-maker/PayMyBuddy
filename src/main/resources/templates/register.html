@@ -5,21 +5,16 @@
 >
 
 <head>
-    <title>Inscription - PayMyBuddy</title> {/* Sera utilisé par th:insert="~{::title}" dans _layout */}
+    <title layout:fragment="title">Inscription - PayMyBuddy</title>
 </head>
 <body>
 <!-- Ce div entier est le fragment qui sera passé au paramètre 'mainContent' du layout -->
-<div id="page-content">
+<div layout:fragment="content">
     <article>
         <hgroup>
             <h1>Inscription</h1>
             <h2>Créez votre compte PayMyBuddy</h2>
         </hgroup>
-
-        <div th:if="${#fields.hasGlobalErrors() or #fields.hasErrors('userDto.email')}" role="alert" class="error-message" id="formErrors">
-            <p th:if="${#fields.hasGlobalErrors()}" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Erreur globale</p>
-            <p th:if="${#fields.hasErrors('userDto.email') && !#fields.hasErrors('userDto.email[_]')}" th:errors="*{userDto.email}">Erreur sur l'email</p>
-        </div>
 
         <form th:action="@{/register}" th:object="${userDto}" method="post" aria-describedby="formErrors">
             <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />

@@ -32,9 +32,6 @@ public class Transaction {
     @Column(length = 255)
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 4)
-    private BigDecimal fee = BigDecimal.ZERO; // Sera calculé par le service
-
     @Column(nullable = false)
     private LocalDateTime timestamp = LocalDateTime.now();
 }

@@ -40,6 +40,9 @@ public class AuthController {
                                       BindingResult result,
                                       RedirectAttributes redirectAttributes) {
         log.info("Tentative d'inscription pour l'email: {}", userDto.getEmail());
+        // 1. LA VALIDATION SE PRODUIT ICI AUTOMATIQUEMENT
+        // grâce à @Valid sur userDto.
+        // Les annotations @NotEmpty, @Size, @Pattern sur les champs de userDto
         if (result.hasErrors()) {
             log.warn("Echec de validation pour l'inscription de {}: {}", userDto.getEmail(), result.getAllErrors());
             return "register"; // Retourne au formulaire avec les erreurs
@@ -53,9 +56,7 @@ public class AuthController {
             log.error("Erreur lors de l'inscription pour {}: {}", userDto.getEmail(), e.getMessage());
             // Met l'erreur dans le BindingResult pour l'afficher sur le formulaire
             result.rejectValue("email", "error.userDto", e.getMessage());
-            // Ou utiliser redirectAttributes si on redirige vers register?error=true
-            // redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            // return "redirect:/register?error";
+
             return "register"; // Reste sur la page register avec l'erreur affichée
         }
     }

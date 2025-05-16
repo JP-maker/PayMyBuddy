@@ -3,6 +3,7 @@ package com.openclassrooms.paymybuddy.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -16,6 +17,9 @@ public class UserRegistrationDto {
     private String email;
 
     @NotEmpty(message = "Le mot de passe ne peut pas être vide")
-    @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
+    @Pattern(
+            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{6,}$",
+            message = "Le mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et avoir une longueur minimale de 6 caractères."
+    )
     private String password;
 }

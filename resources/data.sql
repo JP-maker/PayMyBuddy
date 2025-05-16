@@ -31,7 +31,6 @@ CREATE TABLE Users (
 CREATE TABLE Connections (
     `user_id_1` INT NOT NULL, -- Premier utilisateur de la relation
     `user_id_2` INT NOT NULL, -- Second utilisateur de la relation
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Date de création de la connexion
     PRIMARY KEY (`user_id_1`, `user_id_2`), -- Clé primaire composite pour garantir l'unicité de la paire
     INDEX `fk_connections_user2_idx` (`user_id_2` ASC), -- Index pour la clé étrangère
     CONSTRAINT `fk_connections_user1`

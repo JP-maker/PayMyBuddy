@@ -5,18 +5,17 @@
       layout:decorate="~{layouts/main_layout.html}"
 >
 
-<th:block th:fragment="content">
+<div layout:fragment="content">
     <hgroup>
         <h1>Bienvenue, <span sec:authentication="principal.username" th:remove="tag">Utilisateur</span> !</h1>
         <h2 id="page-subtitle">Gérez vos transferts et votre historique</h2>
     </hgroup>
 
-    <section aria-labelledby="balance-heading">
+    <article aria-labelledby="balance-heading">
         <h3 id="balance-heading">Votre Solde</h3>
         <p class="balance" th:text="${#numbers.formatDecimal(balance, 1, 'COMMA', 2, 'POINT')} + ' €'">0.00 €</p>
-    </section>
+    </article>
 
-    <!-- Messages de succès/erreur pour le transfert -->
     <div th:if="${transferSuccess}" class="success-message" role="alert" id="transferSuccessMsg" th:text="${transferSuccess}"></div>
     <div th:if="${transferError}" class="error-message" role="alert" id="transferErrorMsg" th:text="${transferError}"></div>
     <div th:if="${#fields.hasErrors('transferDto.*')}" class="error-message" role="alert" id="transferFormErrors">
@@ -26,19 +25,18 @@
         </ul>
     </div>
 
-    <section aria-labelledby="transfer-heading">
+    <article aria-labelledby="transfer-heading">
         <h3 id="transfer-heading">Effectuer un Transfert</h3>
         <form th:action="@{/transfer}" th:object="${transferDto}" method="post" aria-describedby="transferFormErrors">
             <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
             <div class="grid">
                 <label for="friend-select">
                     Choisir un ami
-                    <select id="friend-select" name="receiverEmail" th:attr="aria-invalid=${#fields.hasErrors('receiverEmail') ? 'true' : 'false'}" aria-describedby="receiverEmailError">
+                    <select id="friend-select" name="selectedFriendForEmail">
                         <option value="">-- Sélectionnez un ami ou entrez un email --</option>
                         <option th:each="connection : ${connections}"
                                 th:value="${connection.email}"
-                                th:text="${connection.username ?: connection.email}"
-                                th:selected="${transferDto != null && connection.email == transferDto.receiverEmail}">
+                                th:text="${connection.username ?: connection.email}">
                             Ami Email
                         </option>
                     </select>
@@ -46,7 +44,13 @@
 
                 <label for="receiverEmailInput">
                     Ou Email Destinataire
-                    <input type="email" id="receiverEmailInput" th:field="*{receiverEmail}" placeholder="ami@example.com" th:attr="aria-invalid=${#fields.hasErrors('receiverEmail') ? 'true' : 'false'}" aria-describedby="receiverEmailError"/>
+                    <input
+                            type="email"
+                            id="receiverEmailInput"
+                            th:field="*{receiverEmail}"
+                            placeholder="ami@example.com"
+                            th:attr="aria-invalid=${#fields.hasErrors('receiverEmail') ? 'true' : 'false'}"
+                            aria-describedby="receiverEmailError"/>
                 </label>
             </div>
             <small id="receiverEmailError" th:if="${#fields.hasErrors('receiverEmail')}" th:errors="*{receiverEmail}" class="error-message" role="alert"></small>
@@ -67,9 +71,9 @@
             </div>
             <button type="submit">Envoyer l'argent</button>
         </form>
-    </section>
+    </article>
 
-    <section class="transactions" aria-labelledby="history-heading">
+    <article class="transactions" aria-labelledby="history-heading">
         <h3 id="history-heading">Mon Historique de Transactions</h3>
         <div th:if="${transactionError}" class="error-message" role="alert" id="historyErrorMsg" th:text="${transactionError}"></div>
 
@@ -87,7 +91,6 @@
                     <th scope="col">Destinataire</th>
                     <th scope="col">Description</th>
                     <th scope="col" style="text-align: right;">Montant (€)</th>
-                    <th scope="col" style="text-align: right;">Frais (€)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -107,11 +110,42 @@
                         th:text="${(isSender ? '-' : '+') + #numbers.formatDecimal(tx.amount, 1, 'COMMA', 2, 'POINT')}">
                         Amount
                     </td>
-                    <td style="text-align: right;" th:text="${#numbers.formatDecimal(tx.fee, 1, 'COMMA', 4, 'POINT')}">Fee</td>
                 </tr>
                 </tbody>
             </table>
         </figure>
-    </section>
-</th:block>
+    </article>
+</div>
+
+<script layout:fragment="script">
+    /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function() {
+            const friendSelect = document.getElementById('friend-select');
+            const receiverEmailInput = document.getElementById('receiverEmailInput');
+
+            if (friendSelect && receiverEmailInput) {
+                friendSelect.addEventListener('change', function() {
+                    if (this.value) { // Si une option (autre que la première vide) est sélectionnée
+                        receiverEmailInput.value = this.value;
+                    }
+                    // Optionnel: si on dé-sélectionne pour revenir à "-- Sélectionnez --"
+                    // else {
+                    //     receiverEmailInput.value = '';
+                    // }
+                });
+
+                // Optionnel: Si une valeur est déjà dans receiverEmailInput (ex: retour d'erreur de validation)
+                // et qu'elle correspond à une option du select, sélectionner cette option.
+                if (receiverEmailInput.value) {
+                    for (let i = 0; i < friendSelect.options.length; i++) {
+                        if (friendSelect.options[i].value === receiverEmailInput.value) {
+                            friendSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    /*]]>*/
+</script>
 </html>
