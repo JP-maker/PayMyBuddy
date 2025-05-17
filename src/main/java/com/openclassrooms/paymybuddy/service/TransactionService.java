@@ -78,6 +78,7 @@ public class TransactionService {
         transaction.setReceiver(receiver);
         transaction.setAmount(amount);
         transaction.setDescription(description);
+        // Pour  la V1
         //transaction.setFee(fee);
         // timestamp est mis par défaut
 

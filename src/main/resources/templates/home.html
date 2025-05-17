@@ -32,7 +32,7 @@
             <div class="grid">
                 <label for="friend-select">
                     Choisir un ami
-                    <select id="friend-select" name="selectedFriendForEmail">
+                    <select id="friend-select" name="selectedFriendForEmail" th:field="*{receiverEmail}">
                         <option value="">-- Sélectionnez un ami ou entrez un email --</option>
                         <option th:each="connection : ${connections}"
                                 th:value="${connection.email}"
@@ -40,17 +40,6 @@
                             Ami Email
                         </option>
                     </select>
-                </label>
-
-                <label for="receiverEmailInput">
-                    Ou Email Destinataire
-                    <input
-                            type="email"
-                            id="receiverEmailInput"
-                            th:field="*{receiverEmail}"
-                            placeholder="ami@example.com"
-                            th:attr="aria-invalid=${#fields.hasErrors('receiverEmail') ? 'true' : 'false'}"
-                            aria-describedby="receiverEmailError"/>
                 </label>
             </div>
             <small id="receiverEmailError" th:if="${#fields.hasErrors('receiverEmail')}" th:errors="*{receiverEmail}" class="error-message" role="alert"></small>
@@ -118,34 +107,5 @@
 </div>
 
 <script layout:fragment="script">
-    /*<![CDATA[*/
-        document.addEventListener('DOMContentLoaded', function() {
-            const friendSelect = document.getElementById('friend-select');
-            const receiverEmailInput = document.getElementById('receiverEmailInput');
-
-            if (friendSelect && receiverEmailInput) {
-                friendSelect.addEventListener('change', function() {
-                    if (this.value) { // Si une option (autre que la première vide) est sélectionnée
-                        receiverEmailInput.value = this.value;
-                    }
-                    // Optionnel: si on dé-sélectionne pour revenir à "-- Sélectionnez --"
-                    // else {
-                    //     receiverEmailInput.value = '';
-                    // }
-                });
-
-                // Optionnel: Si une valeur est déjà dans receiverEmailInput (ex: retour d'erreur de validation)
-                // et qu'elle correspond à une option du select, sélectionner cette option.
-                if (receiverEmailInput.value) {
-                    for (let i = 0; i < friendSelect.options.length; i++) {
-                        if (friendSelect.options[i].value === receiverEmailInput.value) {
-                            friendSelect.selectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-    /*]]>*/
 </script>
 </html>
