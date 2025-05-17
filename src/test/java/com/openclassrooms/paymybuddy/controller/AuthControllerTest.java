@@ -61,7 +61,7 @@ class AuthControllerTest {
         mockMvc.perform(post("/register")
                         .param("username", "testuser")
                         .param("email", "test@example.com")
-                        .param("password", "password123")
+                        .param("password", "Password123")
                         .with(csrf())) // Important si CSRF est activé (par défaut dans Spring Security)
                 .andExpect(status().is3xxRedirection()) // Statut de redirection
                 .andExpect(redirectedUrl("/login"))
@@ -94,7 +94,7 @@ class AuthControllerTest {
         mockMvc.perform(post("/register")
                         .param("username", "testuser")
                         .param("email", "existing@example.com")
-                        .param("password", "password123")
+                        .param("password", "Password123")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))

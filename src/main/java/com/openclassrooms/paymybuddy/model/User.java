@@ -10,6 +10,12 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Classe représentant un utilisateur du système.
+ * Chaque utilisateur a un identifiant unique, un email, un mot de passe (hashé),
+ * un solde, une date de création et une date de mise à jour.
+ * Les utilisateurs peuvent avoir des connexions (amis) et effectuer des transactions.
+ */
 @Data
 @Entity
 @Table(name = "Users", uniqueConstraints = {

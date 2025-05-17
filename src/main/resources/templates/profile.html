@@ -16,6 +16,8 @@
 
   <div th:if="${profileSuccess}" class="success-message" role="alert" id="profileSuccessMsg" th:text="${profileSuccess}"></div>
   <div th:if="${profileError}" class="error-message" role="alert" id="profileErrorMsg" th:text="${profileError}"></div>
+  <div th:if="${passwordSuccess}" class="success-message" role="alert" id="passwordSuccessMsg" th:text="${passwordSuccess}"></div>
+  <div th:if="${passwordError}" class="error-message" role="alert" id="passwordErrorMsg" th:text="${passwordError}"></div>
 
   <article>
     <section aria-labelledby="account-info-heading">
@@ -32,22 +34,39 @@
 
     <section aria-labelledby="change-password-heading" style="margin-top: 2rem; border-top: 1px solid var(--pico-form-element-border-color); padding-top: 1rem;">
       <h4 id="change-password-heading">Changer le mot de passe</h4>
-      <p><em>Fonctionnalité à venir...</em></p>
-      <!--
-      <form th:action="@{/profile/change-password}" method="post">
+      <form th:action="@{/profile/change-password}" th:object="${changePasswordDto}" method="post">
           <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
           <label for="currentPassword">Mot de passe actuel</label>
-          <input type="password" id="currentPassword" name="currentPassword" required autocomplete="current-password">
+          <input
+                  type="password"
+                  id="currentPassword"
+                  name="currentPassword" required
+                  autocomplete="current-password"
+                  th:attr="aria-invalid=${#fields.hasErrors('currentPassword') ? 'true' : 'false'}"
+                  aria-describedby="currentPasswordError">
+          <small id="currentPasswordError" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}" class="error-message" role="alert"></small>
 
           <label for="newPassword">Nouveau mot de passe</label>
-          <input type="password" id="newPassword" name="newPassword" required autocomplete="new-password">
+          <input
+                  type="password"
+                  id="newPassword"
+                  name="newPassword" required
+                  autocomplete="new-password"
+                  th:attr="aria-invalid=${#fields.hasErrors('newPassword') ? 'true' : 'false'}"
+                  aria-describedby="newPasswordError">
+          <small id="newPasswordError" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}" class="error-message" role="alert"></small>
 
           <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="new-password">
-
+          <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword" required
+                  autocomplete="new-password"
+                  th:attr="aria-invalid=${#fields.hasErrors('confirmPassword') ? 'true' : 'false'}"
+                  aria-describedby="confirmPasswordError">
+          <small id="confirmPasswordError" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-message" role="alert"></small>
           <button type="submit">Changer le mot de passe</button>
       </form>
-      -->
     </section>
   </article>
 </div>

@@ -6,6 +6,9 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Classe représentant une transaction entre deux utilisateurs.
+ */
 @Data
 @Entity
 @Table(name = "Transactions")

@@ -22,6 +22,12 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Contrôleur principal de l'application, gérant la page d'accueil.
+ * Cette page affiche les informations de l'utilisateur connecté, son solde,
+ * la liste de ses connexions (amis), son historique de transactions,
+ * et fournit un formulaire pour effectuer des transferts d'argent.
+ */
 @Slf4j
 @Controller
 public class HomeController {
@@ -29,11 +35,28 @@ public class HomeController {
     private final UserService userService;
     private final TransactionService transactionService;
 
+    /**
+     * Construit une instance de {@code HomeController} avec les services requis.
+     *
+     * @param userService        Le service pour les opérations liées aux utilisateurs.
+     * @param transactionService Le service pour gérer les transactions financières.
+     */
     public HomeController(UserService userService, TransactionService transactionService) {
         this.userService = userService;
         this.transactionService = transactionService;
     }
 
+    /**
+     * Gère les requêtes GET vers "/" et "/home" pour afficher la page d'accueil.
+     * Récupère l'utilisateur actuellement authentifié, son solde, ses connexions,
+     * et son historique de transactions. Ces informations sont ajoutées au modèle
+     * pour être affichées dans la vue. Un {@link TransferDto} vide est également
+     * préparé pour le formulaire de transfert.
+     *
+     * @param model L'objet Model de Spring pour passer des données à la vue.
+     * @return Le nom de la vue (template Thymeleaf) pour la page d'accueil ("home").
+     * @throws RuntimeException si l'utilisateur actuellement authentifié n'est pas trouvé.
+     */
     @GetMapping(value = {"/", "/home"})
     public String homePage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,6 +87,23 @@ public class HomeController {
         return "home"; // Retourne home.html
     }
 
+    /**
+     * Gère les requêtes POST vers "/transfer" pour traiter une demande de transfert d'argent.
+     * Valide les données du transfert. Si la validation échoue, les informations nécessaires
+     * sont rechargées et l'utilisateur est retourné à la page d'accueil avec les erreurs.
+     * Si la validation réussit, le service de transaction est appelé pour effectuer le transfert.
+     * L'utilisateur est ensuite redirigé vers la page d'accueil avec un message de succès ou d'erreur.
+     *
+     * @param transferDto        Le DTO {@link TransferDto} contenant les détails du transfert, validé.
+     * @param result             L'objet {@link BindingResult} qui contient les résultats de la validation.
+     * @param redirectAttributes Utilisé pour ajouter des attributs flash pour les messages lors de la redirection.
+     * @param model              L'objet Model de Spring, utilisé pour repasser les données nécessaires à la vue home
+     *                           en cas d'échec de validation.
+     * @return Une chaîne de redirection vers "/home" après la tentative de transfert,
+     *         ou le nom de la vue "home" en cas d'échec de validation du formulaire.
+     * @throws RuntimeException si l'utilisateur actuellement authentifié (expéditeur) n'est pas trouvé
+     *                          lors du rechargement des données pour affichage d'erreur.
+     */
     @PostMapping("/transfer")
     public String processTransfer(@Valid @ModelAttribute("transferDto") TransferDto transferDto,
                                   BindingResult result,
