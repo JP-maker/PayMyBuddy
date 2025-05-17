@@ -9,6 +9,7 @@ import com.openclassrooms.paymybuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -21,8 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -119,15 +119,17 @@ class HomeControllerTest {
     void processTransfer_shouldRedirectToHome_onServiceException() throws Exception {
         // Arrange
         String errorMessage = "Solde insuffisant";
-        doThrow(new Exception(errorMessage)).when(transactionService)
-                .transferMoney(anyString(), anyString(), any(BigDecimal.class), anyString());
-
         mockMvc.perform(post("/transfer")
                         .param("receiverEmail", "friend@example.com")
                         .param("amount", "5000.00") // Montant élevé pour simuler l'erreur
                         .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/home"))
-                .andExpect(flash().attribute("transferError", "Erreur lors du transfert : " + errorMessage));
+                        .andExpect(status().is3xxRedirection())
+                        .andExpect(redirectedUrl("/home"));
+        Mockito.verify(transactionService).transferMoney(
+                eq("user@example.com"), // L'email de @WithMockUser
+                eq("friend@example.com"),
+                eq(new BigDecimal("5000.00")),
+                isNull() // Si la description est attendue comme null
+        );
     }
 }
