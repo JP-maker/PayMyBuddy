@@ -19,22 +19,22 @@
 <header class="container-fluid" style="padding: 0.5rem 0; border-bottom: 1px solid var(--pico-form-element-border-color);">
     <nav class="container">
         <ul>
-            <li><a th:href="@{/home}" style="text-decoration: none;"><strong>PayMyBuddy</strong></a></li>
+            <li><a th:href="@{/home}" style="text-decoration: none;"><strong>Pay My Buddy</strong></a></li>
         </ul>
         <ul sec:authorize="isAuthenticated()">
-            <li><a th:href="@{/home}" role="menuitem">Accueil/Transfert</a></li>
-            <li><a th:href="@{/connections}" role="menuitem">Mes Amis</a></li>
+            <li><a th:href="@{/home}" role="menuitem">Transférer</a></li>
             <li><a th:href="@{/profile}" role="menuitem">Profil</a></li>
+            <li><a th:href="@{/connections}" role="menuitem">Ajouter une relation</a></li>
             <li>
                 <form th:action="@{/logout}" method="post" style="display: inline; margin:0;">
                     <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
-                    <button type="submit" class="secondary outline" style="padding: 0.35rem 0.75rem; margin-bottom:0;">Déconnexion</button>
+                    <button type="submit" class="secondary outline" style="padding: 0.35rem 0.75rem; margin-bottom:0;">Se déconnecter</button>
                 </form>
             </li>
         </ul>
         <ul sec:authorize="!isAuthenticated()">
-            <li><a th:href="@{/login}" role="menuitem">Connexion</a></li>
-            <li><a th:href="@{/register}" role="menuitem">Inscription</a></li>
+            <li><a th:href="@{/login}" role="menuitem">Se connecter</a></li>
+            <li><a th:href="@{/register}" role="menuitem">S'inscrire</a></li>
         </ul>
     </nav>
 </header>

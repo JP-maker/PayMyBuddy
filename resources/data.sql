@@ -21,7 +21,7 @@ CREATE TABLE Users (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Date de création du compte
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Date de dernière modification
     PRIMARY KEY (`user_id`),
-    UNIQUE INDEX `idx_email_unique` (`email` ASC), -- Assure l'unicité de l'email
+    UNIQUE INDEX `idx_email_unique` (`email` ASC) -- Assure l'unicité de l'email
 );
 
 -- -----------------------------------------------------
@@ -70,3 +70,22 @@ CREATE TABLE Transactions (
         ON DELETE RESTRICT -- Empêche la suppression d'un utilisateur ayant reçu des fonds
         ON UPDATE CASCADE
 );
+
+INSERT INTO Users (username, email, password_hash, balance) VALUES
+('Alice', 'alice@mail.fr', '$2a$10$aBAzu8boefhmuRiNRaSzKeIGQAgafZ7cDqJxOTj4sdb9WL2rSOk.S', 1000.00),
+('Bob', 'bob@mail.fr', '$2a$10$aBAzu8boefhmuRiNRaSzKeIGQAgafZ7cDqJxOTj4sdb9WL2rSOk.S', 500.00),
+('Charlie', 'charlie@mail.fr', '$2a$10$aBAzu8boefhmuRiNRaSzKeIGQAgafZ7cDqJxOTj4sdb9WL2rSOk.S', 750.00),
+('David', 'david@mail.fr', '$2a$10$aBAzu8boefhmuRiNRaSzKeIGQAgafZ7cDqJxOTj4sdb9WL2rSOk.S', 300.00);
+
+INSERT INTO Connections (user_id_1, user_id_2) VALUES
+(1, 2), -- Alice et Bob
+(1, 3), -- Alice et Charlie
+(2, 3), -- Bob et Charlie
+(2, 4), -- Bob et David
+(3, 4); -- Charlie et David
+
+INSERT INTO Transactions (sender_id, receiver_id, amount, description) VALUES
+(1, 2, 100.00, 'Transfert pour le dîner'),
+(2, 3, 50.00, 'Remboursement de la dette'),
+(3, 4, 200.00, 'Achat de livres'),
+(4, 1, 150.00, 'Remboursement de la dette');

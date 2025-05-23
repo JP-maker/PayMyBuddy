@@ -27,7 +27,7 @@
       <form th:action="@{/profile/update}" method="post">
         <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
         <label for="username">Nom d'utilisateur (pour affichage)</label>
-        <input type="text" id="username" name="username" th:value="${user.username}" placeholder="Votre nom ou pseudo" autocomplete="username">
+        <input type="text" id="username" name="username" th:value="${user.username}" placeholder="Votre nom ou pseudo" autocomplete="username" aria-describedby="usernameError">
         <button type="submit">Mettre à jour le nom d'utilisateur</button>
       </form>
     </section>

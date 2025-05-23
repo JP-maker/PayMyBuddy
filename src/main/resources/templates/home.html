@@ -33,7 +33,7 @@
                 <label for="friend-select">
                     Choisir un ami
                     <select id="friend-select" name="selectedFriendForEmail" th:field="*{receiverEmail}">
-                        <option value="">-- Sélectionnez un ami ou entrez un email --</option>
+                        <option value="">-- Sélectionnez une relation --</option>
                         <option th:each="connection : ${connections}"
                                 th:value="${connection.email}"
                                 th:text="${connection.username ?: connection.email}">
@@ -58,12 +58,12 @@
                 </label>
                 <small id="descriptionError" th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-message" role="alert"></small>
             </div>
-            <button type="submit">Envoyer l'argent</button>
+            <button type="submit">Payer</button>
         </form>
     </article>
 
     <article class="transactions" aria-labelledby="history-heading">
-        <h3 id="history-heading">Mon Historique de Transactions</h3>
+        <h3 id="history-heading">Mes Transactions</h3>
         <div th:if="${transactionError}" class="error-message" role="alert" id="historyErrorMsg" th:text="${transactionError}"></div>
 
         <div th:if="${#lists.isEmpty(transactions)}">
