@@ -162,18 +162,13 @@ public class UserService {
 
         // Vérifier si la connexion existe déjà (dans un sens ou l'autre)
         log.info("Vérification de l'existence de la connexion entre {} et {}", userEmail, friendEmail);
-        boolean alreadyConnected = user.getConnections().contains(friend) ||
-                friend.getConnections().contains(user); // Nécessite de charger les connexions de l'ami aussi
+        boolean alreadyConnected = user.getConnections().contains(friend);
 
         if (alreadyConnected) {
             log.warn("Tentative d'ajout d'une connexion déjà existante entre {} et {}", userEmail, friendEmail);
             throw new Exception("Vous êtes déjà connecté avec cet utilisateur.");
         }
 
-        // Ajoute la connexion. Grâce à la contrainte CHECK(user_id_1 < user_id_2) en BDD,
-        // on peut théoriquement ajouter dans un seul sens (le plus petit ID en premier).
-        // Mais JPA @ManyToMany ne gère pas ça directement. On ajoute classiquement.
-        // L'implémentation JPA standard gère la table de jointure.
         user.getConnections().add(friend);
         // Si on veut une relation bidirectionnelle gérée par JPA aussi :
         // friend.getConnectedBy().add(user); // 'connectedBy' est l'inverse de 'connections'
